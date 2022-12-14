@@ -1,0 +1,26 @@
+{
+    "H2O":{
+        "r_min":0.70,         
+        "r_max":1.90,         
+        "r_step":0.05,         
+        "theta_min":70.0,      
+        "theta_max":160.0,     
+        "theta_step":1.0,
+        "e_min":-76.0,
+        "e_max":-75.6,
+        "r_fit_range": 2,
+        "plot_r_fit":true,
+        "t_fit_range": 7,
+        "plot_t_fit":true    
+    },
+    "H2S":{
+        "r_min":0.60,         
+        "r_max":1.80,         
+        "r_step":0.05,         
+        "theta_min":70.0,      
+        "theta_max":160.0,     
+        "theta_step":1.0,
+        "e_min":-398.7,
+        "e_max":-398.4 
+    }
+}
