@@ -201,6 +201,7 @@ def plot(energy_array):
     ax.set_ylabel(r'$r\ /\ \AA$')
     ax.set_xlabel(r'$\theta\ /\ \degree$')
     ax.set_zlabel(r'Energy / Hartrees')
+    ax.set_title(r"Plot of energy against r and $\theta$")
 
     plt.show()
 
@@ -238,6 +239,7 @@ def get_vib_frequencies(eq_geom, energy_array):
         fit_range=(r_index - R_FIT_RANGE, r_index + R_FIT_RANGE),
         xlab=r'$r\ -\ r_{eq}\ /\ \AA$',
         ylab=r'$E\ -\ E_{eq}$ / Hartrees',
+        plot_title=r"Potential energy curve along stretching mode",
         plot=PLOT_R_FIT,
         )
 
@@ -249,22 +251,27 @@ def get_vib_frequencies(eq_geom, energy_array):
         fit_range=(t_index - T_FIT_RANGE, t_index + T_FIT_RANGE),
         xlab=r'$\theta \ -\ \theta_{eq}\ /\ \degree$',
         ylab=r'$E\ -\ E_{eq}$ / Hartrees',
+        plot_title=r"Potential energy curve along bending mode",
         plot=PLOT_T_FIT,
         )
 
+    #Convert to SI units
     kr = kr * EH / ((1E-10)**2)
     kt = kt * EH / ((np.pi / 180)**2)
-    nu_1 = np.sqrt(kr / (2 * MU)) / (2 * np.pi * C)
-    nu_2 = np.sqrt(kt / ((r_eq * 1E-10)**2 * 0.5 * MU)) / (2 * np.pi * C)
-    return (nu_1, nu_2)
- 
-    
+    print("----------------")
+    print("k_r\t=\t%.3e N m-1" % kr)
+    print("k_theta\t=\t%.3e N rad-1" % kt)
 
-    #Option to plot the curve fit around the equilibrium
-    
+    #Calculate vibration frequencies
+    nu_stretch = np.sqrt(kr / (2 * MU)) / (2 * np.pi * C)
+    nu_bend = np.sqrt(kt / ((r_eq * 1E-10)**2 * 0.5 * MU)) / (2 * np.pi * C)
 
+    print("Stretching frequency\t=\t%.0f cm-1" % nu_stretch)
+    print("Bending frequency\t=\t%.0f cm-1" % nu_bend)
+    return (nu_stretch, nu_bend)
 
-def fit(x_range,x_eq,y_range,y_eq,fit_range,plot=False,xlab="",ylab=""):
+def fit(x_range,x_eq,y_range,y_eq,fit_range,plot=False,xlab="",ylab="",
+        plot_title=""):
     X = x_range - x_eq
     Y = y_range - y_eq
     lower = max(fit_range[0],0)
@@ -280,6 +287,8 @@ def fit(x_range,x_eq,y_range,y_eq,fit_range,plot=False,xlab="",ylab=""):
         plt.plot(x_arr, fit, color="red", linewidth=2)
         plt.xlabel(xlab)
         plt.ylabel(ylab)
+        plt.ylim((0 - np.amax(Y)*0.05,min(np.amax(Y)*1.05, ERANGE[1] - y_eq)))
+        plt.title(plot_title)
         plt.show()
 
     return k
@@ -287,7 +296,6 @@ def fit(x_range,x_eq,y_range,y_eq,fit_range,plot=False,xlab="",ylab=""):
 def f(x, k):
     #Function to be fit
     return 0.5 * k * x**2
-
 
 
 #Main Program Loop
@@ -299,11 +307,9 @@ while True:
 
     eq_geom = get_equillibrium_geometry(energy_array)
     show_equillibrium_values(eq_geom)
-
-    print(get_vib_frequencies(eq_geom, energy_array))
+    get_vib_frequencies(eq_geom, energy_array)
 
     plot(energy_array)
 
-    
     input("Press enter to continue...")
 exit()
