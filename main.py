@@ -303,7 +303,7 @@ while True:
     welcome_message()
     commands()
 
-    energy_array = command_input(default=True) #Set default=True for testing
+    energy_array = command_input(default=False) #Set default=True for testing
 
     eq_geom = get_equillibrium_geometry(energy_array)
     show_equillibrium_values(eq_geom)
